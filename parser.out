@@ -1,0 +1,243 @@
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Unused terminals:
+
+    DIVIDE
+    DOT
+    MINUS
+    NUMBER
+    PLUS
+    STRING_LITERAL
+    TIMES
+
+Grammar
+
+Rule 0     S' -> program
+Rule 1     program -> PUBLIC CLASS IDENTIFIER LBRACE main_method RBRACE
+Rule 2     main_method -> PUBLIC STATIC VOID MAIN LPAREN STRING LBRACKET RBRACKET IDENTIFIER RPAREN close
+Rule 3     close -> LBRACE system_out RBRACE
+Rule 4     system_out -> SYSOUT LPAREN RPAREN SEMICOLON
+
+Terminals, with rules where they appear
+
+CLASS                : 1
+DIVIDE               : 
+DOT                  : 
+IDENTIFIER           : 1 2
+LBRACE               : 1 3
+LBRACKET             : 2
+LPAREN               : 2 4
+MAIN                 : 2
+MINUS                : 
+NUMBER               : 
+PLUS                 : 
+PUBLIC               : 1 2
+RBRACE               : 1 3
+RBRACKET             : 2
+RPAREN               : 2 4
+SEMICOLON            : 4
+STATIC               : 2
+STRING               : 2
+STRING_LITERAL       : 
+SYSOUT               : 4
+TIMES                : 
+VOID                 : 2
+error                : 
+
+Nonterminals, with rules where they appear
+
+close                : 2
+main_method          : 1
+program              : 0
+system_out           : 3
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . program
+    (1) program -> . PUBLIC CLASS IDENTIFIER LBRACE main_method RBRACE
+
+    PUBLIC          shift and go to state 2
+
+    program                        shift and go to state 1
+
+state 1
+
+    (0) S' -> program .
+
+
+
+state 2
+
+    (1) program -> PUBLIC . CLASS IDENTIFIER LBRACE main_method RBRACE
+
+    CLASS           shift and go to state 3
+
+
+state 3
+
+    (1) program -> PUBLIC CLASS . IDENTIFIER LBRACE main_method RBRACE
+
+    IDENTIFIER      shift and go to state 4
+
+
+state 4
+
+    (1) program -> PUBLIC CLASS IDENTIFIER . LBRACE main_method RBRACE
+
+    LBRACE          shift and go to state 5
+
+
+state 5
+
+    (1) program -> PUBLIC CLASS IDENTIFIER LBRACE . main_method RBRACE
+    (2) main_method -> . PUBLIC STATIC VOID MAIN LPAREN STRING LBRACKET RBRACKET IDENTIFIER RPAREN close
+
+    PUBLIC          shift and go to state 6
+
+    main_method                    shift and go to state 7
+
+state 6
+
+    (2) main_method -> PUBLIC . STATIC VOID MAIN LPAREN STRING LBRACKET RBRACKET IDENTIFIER RPAREN close
+
+    STATIC          shift and go to state 8
+
+
+state 7
+
+    (1) program -> PUBLIC CLASS IDENTIFIER LBRACE main_method . RBRACE
+
+    RBRACE          shift and go to state 9
+
+
+state 8
+
+    (2) main_method -> PUBLIC STATIC . VOID MAIN LPAREN STRING LBRACKET RBRACKET IDENTIFIER RPAREN close
+
+    VOID            shift and go to state 10
+
+
+state 9
+
+    (1) program -> PUBLIC CLASS IDENTIFIER LBRACE main_method RBRACE .
+
+    $end            reduce using rule 1 (program -> PUBLIC CLASS IDENTIFIER LBRACE main_method RBRACE .)
+
+
+state 10
+
+    (2) main_method -> PUBLIC STATIC VOID . MAIN LPAREN STRING LBRACKET RBRACKET IDENTIFIER RPAREN close
+
+    MAIN            shift and go to state 11
+
+
+state 11
+
+    (2) main_method -> PUBLIC STATIC VOID MAIN . LPAREN STRING LBRACKET RBRACKET IDENTIFIER RPAREN close
+
+    LPAREN          shift and go to state 12
+
+
+state 12
+
+    (2) main_method -> PUBLIC STATIC VOID MAIN LPAREN . STRING LBRACKET RBRACKET IDENTIFIER RPAREN close
+
+    STRING          shift and go to state 13
+
+
+state 13
+
+    (2) main_method -> PUBLIC STATIC VOID MAIN LPAREN STRING . LBRACKET RBRACKET IDENTIFIER RPAREN close
+
+    LBRACKET        shift and go to state 14
+
+
+state 14
+
+    (2) main_method -> PUBLIC STATIC VOID MAIN LPAREN STRING LBRACKET . RBRACKET IDENTIFIER RPAREN close
+
+    RBRACKET        shift and go to state 15
+
+
+state 15
+
+    (2) main_method -> PUBLIC STATIC VOID MAIN LPAREN STRING LBRACKET RBRACKET . IDENTIFIER RPAREN close
+
+    IDENTIFIER      shift and go to state 16
+
+
+state 16
+
+    (2) main_method -> PUBLIC STATIC VOID MAIN LPAREN STRING LBRACKET RBRACKET IDENTIFIER . RPAREN close
+
+    RPAREN          shift and go to state 17
+
+
+state 17
+
+    (2) main_method -> PUBLIC STATIC VOID MAIN LPAREN STRING LBRACKET RBRACKET IDENTIFIER RPAREN . close
+    (3) close -> . LBRACE system_out RBRACE
+
+    LBRACE          shift and go to state 19
+
+    close                          shift and go to state 18
+
+state 18
+
+    (2) main_method -> PUBLIC STATIC VOID MAIN LPAREN STRING LBRACKET RBRACKET IDENTIFIER RPAREN close .
+
+    RBRACE          reduce using rule 2 (main_method -> PUBLIC STATIC VOID MAIN LPAREN STRING LBRACKET RBRACKET IDENTIFIER RPAREN close .)
+
+
+state 19
+
+    (3) close -> LBRACE . system_out RBRACE
+    (4) system_out -> . SYSOUT LPAREN RPAREN SEMICOLON
+
+    SYSOUT          shift and go to state 21
+
+    system_out                     shift and go to state 20
+
+state 20
+
+    (3) close -> LBRACE system_out . RBRACE
+
+    RBRACE          shift and go to state 22
+
+
+state 21
+
+    (4) system_out -> SYSOUT . LPAREN RPAREN SEMICOLON
+
+    LPAREN          shift and go to state 23
+
+
+state 22
+
+    (3) close -> LBRACE system_out RBRACE .
+
+    RBRACE          reduce using rule 3 (close -> LBRACE system_out RBRACE .)
+
+
+state 23
+
+    (4) system_out -> SYSOUT LPAREN . RPAREN SEMICOLON
+
+    RPAREN          shift and go to state 24
+
+
+state 24
+
+    (4) system_out -> SYSOUT LPAREN RPAREN . SEMICOLON
+
+    SEMICOLON       shift and go to state 25
+
+
+state 25
+
+    (4) system_out -> SYSOUT LPAREN RPAREN SEMICOLON .
+
+    RBRACE          reduce using rule 4 (system_out -> SYSOUT LPAREN RPAREN SEMICOLON .)
+
