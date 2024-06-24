@@ -73,14 +73,11 @@ def t_error(t):
 data = '''
     public class HolaMundo {
         public static void main(String[] args) {
-            System.out.println();
+            System.out.println("");
         }
     }
     '''
 
-lexer = lex.lex()
-
-import ply.yacc as yacc
 
 def p_program(p):
     '''
@@ -90,46 +87,93 @@ def p_program(p):
 
 def p_main_method(p):
     '''
-    main_method : PUBLIC STATIC VOID MAIN LPAREN STRING LBRACKET RBRACKET IDENTIFIER RPAREN close
+    main_method : PUBLIC STATIC VOID MAIN LPAREN STRING LBRACKET RBRACKET IDENTIFIER RPAREN process
     '''
     p[0] = ('main_method', p[9], p[11])
 
-def p_close(p):
+def p_process(p):
     '''
-    close : LBRACE system_out RBRACE
+    process : LBRACE statements RBRACE
     '''
-    p[0] = ('close', p[2])
+    p[0] = ('process', p[2])
 
-def p_system_out(p):
+def p_statements(p):
+    '''statements : statement
+                  | statement statements'''
+    if len(p) == 2:
+        p[0] = ('statements', p[1])
+    else:
+        p[0] = ('statements', p[1], p[2])
+
+def p_statement(p):
+    '''statement : SYSOUT LPAREN expression RPAREN SEMICOLON'''
+    p[0] = ('statement', p[3])
+
+def p_expression(p):
     '''
-    system_out : SYSOUT LPAREN RPAREN SEMICOLON
+    expression : type_exp
+               | expression PLUS type_exp
+               | expression MINUS type_exp
+               | expression TIMES type_exp
+               | expression DIVIDE type_exp
     '''
-    p[0] = ('system_out',)
+
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        p[0] = ('multiple', p[2], p[1], p[3])
+
+def p_type_exp(p):
+    '''
+    type_exp : STRING_LITERAL
+             | NUMBER
+             | IDENTIFIER
+    '''
+
+    p[0] = ('type_exp', p[1])
+
+error_message = None
 
 def p_error(p):
-    print(f"Error de sintaxis {p}")
+    global error_message
+    if p:
+        error_message = f"Error de sintaxis en '{p.value}'"
+    else:
+        error_message = "Error de sintaxis: Fin inesperado de entrada"
 
-parser = yacc.yacc()
+    raise SyntaxError(error_message)
 
 def analize_code(code):
-
+    lexer = lex.lex()
+    parser = yacc.yacc()
     lexer.input(code)
     tokens = []
-    
-    while True:
-        tok = lexer.token()
-        if not tok:
-            break
-        tokens.append((tok.type, tok.value, tok.lineno, tok.lexpos))
-    return tokens
+    global error_message
+    error_message = None
+
+    try:
+        while True:
+            tok = lexer.token()
+            if not tok:
+                break
+            tokens.append((tok.type, tok.value, tok.lineno, tok.lexpos))
+        result = parser.parse(code)
+    except SyntaxError as e:
+        error_message = str(e)
+        result = None
+
+    return tokens, result
+
 
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    tokens = []
+    result = None
     if request.method == 'POST':
         code = request.form['code']
-        tokens = analize_code(code)
-    return render_template('index.html', tokens = tokens)
+        tokens, result = analize_code(code)
+    return render_template('index.html', tokens=tokens, error_message=error_message)
 
 if __name__ == '__main__':
     app.run(debug=True)

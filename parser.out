@@ -2,54 +2,61 @@ Created by PLY version 3.11 (http://www.dabeaz.com/ply)
 
 Unused terminals:
 
-    DIVIDE
     DOT
-    MINUS
-    NUMBER
-    PLUS
-    STRING_LITERAL
-    TIMES
 
 Grammar
 
 Rule 0     S' -> program
 Rule 1     program -> PUBLIC CLASS IDENTIFIER LBRACE main_method RBRACE
-Rule 2     main_method -> PUBLIC STATIC VOID MAIN LPAREN STRING LBRACKET RBRACKET IDENTIFIER RPAREN close
-Rule 3     close -> LBRACE system_out RBRACE
-Rule 4     system_out -> SYSOUT LPAREN RPAREN SEMICOLON
+Rule 2     main_method -> PUBLIC STATIC VOID MAIN LPAREN STRING LBRACKET RBRACKET IDENTIFIER RPAREN process
+Rule 3     process -> LBRACE statements RBRACE
+Rule 4     statements -> statement
+Rule 5     statements -> statement statements
+Rule 6     statement -> SYSOUT LPAREN expression RPAREN SEMICOLON
+Rule 7     expression -> type_exp
+Rule 8     expression -> expression PLUS type_exp
+Rule 9     expression -> expression MINUS type_exp
+Rule 10    expression -> expression TIMES type_exp
+Rule 11    expression -> expression DIVIDE type_exp
+Rule 12    type_exp -> STRING_LITERAL
+Rule 13    type_exp -> NUMBER
+Rule 14    type_exp -> IDENTIFIER
 
 Terminals, with rules where they appear
 
 CLASS                : 1
-DIVIDE               : 
+DIVIDE               : 11
 DOT                  : 
-IDENTIFIER           : 1 2
+IDENTIFIER           : 1 2 14
 LBRACE               : 1 3
 LBRACKET             : 2
-LPAREN               : 2 4
+LPAREN               : 2 6
 MAIN                 : 2
-MINUS                : 
-NUMBER               : 
-PLUS                 : 
+MINUS                : 9
+NUMBER               : 13
+PLUS                 : 8
 PUBLIC               : 1 2
 RBRACE               : 1 3
 RBRACKET             : 2
-RPAREN               : 2 4
-SEMICOLON            : 4
+RPAREN               : 2 6
+SEMICOLON            : 6
 STATIC               : 2
 STRING               : 2
-STRING_LITERAL       : 
-SYSOUT               : 4
-TIMES                : 
+STRING_LITERAL       : 12
+SYSOUT               : 6
+TIMES                : 10
 VOID                 : 2
 error                : 
 
 Nonterminals, with rules where they appear
 
-close                : 2
+expression           : 6 8 9 10 11
 main_method          : 1
+process              : 2
 program              : 0
-system_out           : 3
+statement            : 4 5
+statements           : 3 5
+type_exp             : 7 8 9 10 11
 
 Parsing method: LALR
 
@@ -92,7 +99,7 @@ state 4
 state 5
 
     (1) program -> PUBLIC CLASS IDENTIFIER LBRACE . main_method RBRACE
-    (2) main_method -> . PUBLIC STATIC VOID MAIN LPAREN STRING LBRACKET RBRACKET IDENTIFIER RPAREN close
+    (2) main_method -> . PUBLIC STATIC VOID MAIN LPAREN STRING LBRACKET RBRACKET IDENTIFIER RPAREN process
 
     PUBLIC          shift and go to state 6
 
@@ -100,7 +107,7 @@ state 5
 
 state 6
 
-    (2) main_method -> PUBLIC . STATIC VOID MAIN LPAREN STRING LBRACKET RBRACKET IDENTIFIER RPAREN close
+    (2) main_method -> PUBLIC . STATIC VOID MAIN LPAREN STRING LBRACKET RBRACKET IDENTIFIER RPAREN process
 
     STATIC          shift and go to state 8
 
@@ -114,7 +121,7 @@ state 7
 
 state 8
 
-    (2) main_method -> PUBLIC STATIC . VOID MAIN LPAREN STRING LBRACKET RBRACKET IDENTIFIER RPAREN close
+    (2) main_method -> PUBLIC STATIC . VOID MAIN LPAREN STRING LBRACKET RBRACKET IDENTIFIER RPAREN process
 
     VOID            shift and go to state 10
 
@@ -128,116 +135,308 @@ state 9
 
 state 10
 
-    (2) main_method -> PUBLIC STATIC VOID . MAIN LPAREN STRING LBRACKET RBRACKET IDENTIFIER RPAREN close
+    (2) main_method -> PUBLIC STATIC VOID . MAIN LPAREN STRING LBRACKET RBRACKET IDENTIFIER RPAREN process
 
     MAIN            shift and go to state 11
 
 
 state 11
 
-    (2) main_method -> PUBLIC STATIC VOID MAIN . LPAREN STRING LBRACKET RBRACKET IDENTIFIER RPAREN close
+    (2) main_method -> PUBLIC STATIC VOID MAIN . LPAREN STRING LBRACKET RBRACKET IDENTIFIER RPAREN process
 
     LPAREN          shift and go to state 12
 
 
 state 12
 
-    (2) main_method -> PUBLIC STATIC VOID MAIN LPAREN . STRING LBRACKET RBRACKET IDENTIFIER RPAREN close
+    (2) main_method -> PUBLIC STATIC VOID MAIN LPAREN . STRING LBRACKET RBRACKET IDENTIFIER RPAREN process
 
     STRING          shift and go to state 13
 
 
 state 13
 
-    (2) main_method -> PUBLIC STATIC VOID MAIN LPAREN STRING . LBRACKET RBRACKET IDENTIFIER RPAREN close
+    (2) main_method -> PUBLIC STATIC VOID MAIN LPAREN STRING . LBRACKET RBRACKET IDENTIFIER RPAREN process
 
     LBRACKET        shift and go to state 14
 
 
 state 14
 
-    (2) main_method -> PUBLIC STATIC VOID MAIN LPAREN STRING LBRACKET . RBRACKET IDENTIFIER RPAREN close
+    (2) main_method -> PUBLIC STATIC VOID MAIN LPAREN STRING LBRACKET . RBRACKET IDENTIFIER RPAREN process
 
     RBRACKET        shift and go to state 15
 
 
 state 15
 
-    (2) main_method -> PUBLIC STATIC VOID MAIN LPAREN STRING LBRACKET RBRACKET . IDENTIFIER RPAREN close
+    (2) main_method -> PUBLIC STATIC VOID MAIN LPAREN STRING LBRACKET RBRACKET . IDENTIFIER RPAREN process
 
     IDENTIFIER      shift and go to state 16
 
 
 state 16
 
-    (2) main_method -> PUBLIC STATIC VOID MAIN LPAREN STRING LBRACKET RBRACKET IDENTIFIER . RPAREN close
+    (2) main_method -> PUBLIC STATIC VOID MAIN LPAREN STRING LBRACKET RBRACKET IDENTIFIER . RPAREN process
 
     RPAREN          shift and go to state 17
 
 
 state 17
 
-    (2) main_method -> PUBLIC STATIC VOID MAIN LPAREN STRING LBRACKET RBRACKET IDENTIFIER RPAREN . close
-    (3) close -> . LBRACE system_out RBRACE
+    (2) main_method -> PUBLIC STATIC VOID MAIN LPAREN STRING LBRACKET RBRACKET IDENTIFIER RPAREN . process
+    (3) process -> . LBRACE statements RBRACE
 
     LBRACE          shift and go to state 19
 
-    close                          shift and go to state 18
+    process                        shift and go to state 18
 
 state 18
 
-    (2) main_method -> PUBLIC STATIC VOID MAIN LPAREN STRING LBRACKET RBRACKET IDENTIFIER RPAREN close .
+    (2) main_method -> PUBLIC STATIC VOID MAIN LPAREN STRING LBRACKET RBRACKET IDENTIFIER RPAREN process .
 
-    RBRACE          reduce using rule 2 (main_method -> PUBLIC STATIC VOID MAIN LPAREN STRING LBRACKET RBRACKET IDENTIFIER RPAREN close .)
+    RBRACE          reduce using rule 2 (main_method -> PUBLIC STATIC VOID MAIN LPAREN STRING LBRACKET RBRACKET IDENTIFIER RPAREN process .)
 
 
 state 19
 
-    (3) close -> LBRACE . system_out RBRACE
-    (4) system_out -> . SYSOUT LPAREN RPAREN SEMICOLON
+    (3) process -> LBRACE . statements RBRACE
+    (4) statements -> . statement
+    (5) statements -> . statement statements
+    (6) statement -> . SYSOUT LPAREN expression RPAREN SEMICOLON
 
-    SYSOUT          shift and go to state 21
+    SYSOUT          shift and go to state 22
 
-    system_out                     shift and go to state 20
+    statements                     shift and go to state 20
+    statement                      shift and go to state 21
 
 state 20
 
-    (3) close -> LBRACE system_out . RBRACE
+    (3) process -> LBRACE statements . RBRACE
 
-    RBRACE          shift and go to state 22
+    RBRACE          shift and go to state 23
 
 
 state 21
 
-    (4) system_out -> SYSOUT . LPAREN RPAREN SEMICOLON
+    (4) statements -> statement .
+    (5) statements -> statement . statements
+    (4) statements -> . statement
+    (5) statements -> . statement statements
+    (6) statement -> . SYSOUT LPAREN expression RPAREN SEMICOLON
 
-    LPAREN          shift and go to state 23
+    RBRACE          reduce using rule 4 (statements -> statement .)
+    SYSOUT          shift and go to state 22
 
+    statement                      shift and go to state 21
+    statements                     shift and go to state 24
 
 state 22
 
-    (3) close -> LBRACE system_out RBRACE .
+    (6) statement -> SYSOUT . LPAREN expression RPAREN SEMICOLON
 
-    RBRACE          reduce using rule 3 (close -> LBRACE system_out RBRACE .)
+    LPAREN          shift and go to state 25
 
 
 state 23
 
-    (4) system_out -> SYSOUT LPAREN . RPAREN SEMICOLON
+    (3) process -> LBRACE statements RBRACE .
 
-    RPAREN          shift and go to state 24
+    RBRACE          reduce using rule 3 (process -> LBRACE statements RBRACE .)
 
 
 state 24
 
-    (4) system_out -> SYSOUT LPAREN RPAREN . SEMICOLON
+    (5) statements -> statement statements .
 
-    SEMICOLON       shift and go to state 25
+    RBRACE          reduce using rule 5 (statements -> statement statements .)
 
 
 state 25
 
-    (4) system_out -> SYSOUT LPAREN RPAREN SEMICOLON .
+    (6) statement -> SYSOUT LPAREN . expression RPAREN SEMICOLON
+    (7) expression -> . type_exp
+    (8) expression -> . expression PLUS type_exp
+    (9) expression -> . expression MINUS type_exp
+    (10) expression -> . expression TIMES type_exp
+    (11) expression -> . expression DIVIDE type_exp
+    (12) type_exp -> . STRING_LITERAL
+    (13) type_exp -> . NUMBER
+    (14) type_exp -> . IDENTIFIER
 
-    RBRACE          reduce using rule 4 (system_out -> SYSOUT LPAREN RPAREN SEMICOLON .)
+    STRING_LITERAL  shift and go to state 28
+    NUMBER          shift and go to state 29
+    IDENTIFIER      shift and go to state 30
+
+    expression                     shift and go to state 26
+    type_exp                       shift and go to state 27
+
+state 26
+
+    (6) statement -> SYSOUT LPAREN expression . RPAREN SEMICOLON
+    (8) expression -> expression . PLUS type_exp
+    (9) expression -> expression . MINUS type_exp
+    (10) expression -> expression . TIMES type_exp
+    (11) expression -> expression . DIVIDE type_exp
+
+    RPAREN          shift and go to state 31
+    PLUS            shift and go to state 32
+    MINUS           shift and go to state 33
+    TIMES           shift and go to state 34
+    DIVIDE          shift and go to state 35
+
+
+state 27
+
+    (7) expression -> type_exp .
+
+    RPAREN          reduce using rule 7 (expression -> type_exp .)
+    PLUS            reduce using rule 7 (expression -> type_exp .)
+    MINUS           reduce using rule 7 (expression -> type_exp .)
+    TIMES           reduce using rule 7 (expression -> type_exp .)
+    DIVIDE          reduce using rule 7 (expression -> type_exp .)
+
+
+state 28
+
+    (12) type_exp -> STRING_LITERAL .
+
+    RPAREN          reduce using rule 12 (type_exp -> STRING_LITERAL .)
+    PLUS            reduce using rule 12 (type_exp -> STRING_LITERAL .)
+    MINUS           reduce using rule 12 (type_exp -> STRING_LITERAL .)
+    TIMES           reduce using rule 12 (type_exp -> STRING_LITERAL .)
+    DIVIDE          reduce using rule 12 (type_exp -> STRING_LITERAL .)
+
+
+state 29
+
+    (13) type_exp -> NUMBER .
+
+    RPAREN          reduce using rule 13 (type_exp -> NUMBER .)
+    PLUS            reduce using rule 13 (type_exp -> NUMBER .)
+    MINUS           reduce using rule 13 (type_exp -> NUMBER .)
+    TIMES           reduce using rule 13 (type_exp -> NUMBER .)
+    DIVIDE          reduce using rule 13 (type_exp -> NUMBER .)
+
+
+state 30
+
+    (14) type_exp -> IDENTIFIER .
+
+    RPAREN          reduce using rule 14 (type_exp -> IDENTIFIER .)
+    PLUS            reduce using rule 14 (type_exp -> IDENTIFIER .)
+    MINUS           reduce using rule 14 (type_exp -> IDENTIFIER .)
+    TIMES           reduce using rule 14 (type_exp -> IDENTIFIER .)
+    DIVIDE          reduce using rule 14 (type_exp -> IDENTIFIER .)
+
+
+state 31
+
+    (6) statement -> SYSOUT LPAREN expression RPAREN . SEMICOLON
+
+    SEMICOLON       shift and go to state 36
+
+
+state 32
+
+    (8) expression -> expression PLUS . type_exp
+    (12) type_exp -> . STRING_LITERAL
+    (13) type_exp -> . NUMBER
+    (14) type_exp -> . IDENTIFIER
+
+    STRING_LITERAL  shift and go to state 28
+    NUMBER          shift and go to state 29
+    IDENTIFIER      shift and go to state 30
+
+    type_exp                       shift and go to state 37
+
+state 33
+
+    (9) expression -> expression MINUS . type_exp
+    (12) type_exp -> . STRING_LITERAL
+    (13) type_exp -> . NUMBER
+    (14) type_exp -> . IDENTIFIER
+
+    STRING_LITERAL  shift and go to state 28
+    NUMBER          shift and go to state 29
+    IDENTIFIER      shift and go to state 30
+
+    type_exp                       shift and go to state 38
+
+state 34
+
+    (10) expression -> expression TIMES . type_exp
+    (12) type_exp -> . STRING_LITERAL
+    (13) type_exp -> . NUMBER
+    (14) type_exp -> . IDENTIFIER
+
+    STRING_LITERAL  shift and go to state 28
+    NUMBER          shift and go to state 29
+    IDENTIFIER      shift and go to state 30
+
+    type_exp                       shift and go to state 39
+
+state 35
+
+    (11) expression -> expression DIVIDE . type_exp
+    (12) type_exp -> . STRING_LITERAL
+    (13) type_exp -> . NUMBER
+    (14) type_exp -> . IDENTIFIER
+
+    STRING_LITERAL  shift and go to state 28
+    NUMBER          shift and go to state 29
+    IDENTIFIER      shift and go to state 30
+
+    type_exp                       shift and go to state 40
+
+state 36
+
+    (6) statement -> SYSOUT LPAREN expression RPAREN SEMICOLON .
+
+    SYSOUT          reduce using rule 6 (statement -> SYSOUT LPAREN expression RPAREN SEMICOLON .)
+    RBRACE          reduce using rule 6 (statement -> SYSOUT LPAREN expression RPAREN SEMICOLON .)
+
+
+state 37
+
+    (8) expression -> expression PLUS type_exp .
+
+    RPAREN          reduce using rule 8 (expression -> expression PLUS type_exp .)
+    PLUS            reduce using rule 8 (expression -> expression PLUS type_exp .)
+    MINUS           reduce using rule 8 (expression -> expression PLUS type_exp .)
+    TIMES           reduce using rule 8 (expression -> expression PLUS type_exp .)
+    DIVIDE          reduce using rule 8 (expression -> expression PLUS type_exp .)
+
+
+state 38
+
+    (9) expression -> expression MINUS type_exp .
+
+    RPAREN          reduce using rule 9 (expression -> expression MINUS type_exp .)
+    PLUS            reduce using rule 9 (expression -> expression MINUS type_exp .)
+    MINUS           reduce using rule 9 (expression -> expression MINUS type_exp .)
+    TIMES           reduce using rule 9 (expression -> expression MINUS type_exp .)
+    DIVIDE          reduce using rule 9 (expression -> expression MINUS type_exp .)
+
+
+state 39
+
+    (10) expression -> expression TIMES type_exp .
+
+    RPAREN          reduce using rule 10 (expression -> expression TIMES type_exp .)
+    PLUS            reduce using rule 10 (expression -> expression TIMES type_exp .)
+    MINUS           reduce using rule 10 (expression -> expression TIMES type_exp .)
+    TIMES           reduce using rule 10 (expression -> expression TIMES type_exp .)
+    DIVIDE          reduce using rule 10 (expression -> expression TIMES type_exp .)
+
+
+state 40
+
+    (11) expression -> expression DIVIDE type_exp .
+
+    RPAREN          reduce using rule 11 (expression -> expression DIVIDE type_exp .)
+    PLUS            reduce using rule 11 (expression -> expression DIVIDE type_exp .)
+    MINUS           reduce using rule 11 (expression -> expression DIVIDE type_exp .)
+    TIMES           reduce using rule 11 (expression -> expression DIVIDE type_exp .)
+    DIVIDE          reduce using rule 11 (expression -> expression DIVIDE type_exp .)
 

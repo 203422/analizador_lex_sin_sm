@@ -32,10 +32,10 @@
                 <h2>Analizador sintáctico</h2>
                 {% if tokens %}
                 <div class="error">
-                    {% if syntax_error %}
-                    {{ syntax_error }}
+                    {% if error_message %}
+                    {{ error_message }}
                     {% else %}
-                    No hay errores de sintaxis
+                    El código es correcto
                     {% endif %}
                 </div>
                 {% endif %}
